@@ -135,7 +135,7 @@ class Waveform:
         hop_length = numseconds_to_numsamples(hop_length_seconds, self.sample_rate)
 
         return librosa.feature.mfcc(
-            self.waveform, sr=self.sample_rate, n_mfcc=n_mfcc, n_fft=n_fft, hop_length=hop_length,
+            y=self.waveform, sr=self.sample_rate, n_mfcc=n_mfcc, n_fft=n_fft, hop_length=hop_length,
         )
 
     def log_melspec(self, n_mels=128, n_fft_seconds=0.04, hop_length_seconds=0.01):
@@ -154,7 +154,7 @@ class Waveform:
         hop_length = numseconds_to_numsamples(hop_length_seconds, self.sample_rate)
 
         melspec = librosa.feature.melspectrogram(
-            self.waveform, sr=self.sample_rate, n_mels=n_mels, n_fft=n_fft, hop_length=hop_length,
+            y=self.waveform, sr=self.sample_rate, n_mels=n_mels, n_fft=n_fft, hop_length=hop_length,
         )
         return librosa.power_to_db(melspec, ref=np.max)
 
@@ -171,7 +171,7 @@ class Waveform:
         n_fft = numseconds_to_numsamples(n_fft_seconds, self.sample_rate)
         hop_length = numseconds_to_numsamples(hop_length_seconds, self.sample_rate)
 
-        mag_spectrum, _ = librosa.core.spectrum._spectrogram(self.waveform, n_fft=n_fft, hop_length=hop_length)
+        mag_spectrum, _ = librosa.core.spectrum._spectrogram(y=self.waveform, n_fft=n_fft, hop_length=hop_length)
         return mag_spectrum
 
     def bark_spectrogram(self, n_fft_seconds=0.04, hop_length_seconds=0.01):
@@ -403,7 +403,7 @@ class Waveform:
         hop_length = numseconds_to_numsamples(hop_length_seconds, self.sample_rate)
 
         return librosa.feature.spectral_flatness(
-            self.waveform, n_fft=n_fft, hop_length=hop_length
+            y=self.waveform, n_fft=n_fft, hop_length=hop_length
         )
 
     def spectral_rolloff(self, roll_percent=0.85, n_fft_seconds=0.04, hop_length_seconds=0.01):
@@ -425,7 +425,7 @@ class Waveform:
         hop_length = numseconds_to_numsamples(hop_length_seconds, self.sample_rate)
 
         return librosa.feature.spectral_rolloff(
-            self.waveform, sr=self.sample_rate, n_fft=n_fft, hop_length=hop_length,
+            y=self.waveform, sr=self.sample_rate, n_fft=n_fft, hop_length=hop_length,
             roll_percent=roll_percent,
         )
 
@@ -495,7 +495,7 @@ class Waveform:
             number of zero crossings in self.waveform zerocrossing["rate"]: number of zero crossings 
             divided by number of samples.
         """
-        num_zerocrossings = librosa.core.zero_crossings(self.waveform).sum()
+        num_zerocrossings = librosa.core.zero_crossings(y=self.waveform).sum()
         rate = num_zerocrossings / self.waveform.shape[0]
         return {"num_zerocrossings": num_zerocrossings, "zerocrossing_rate": rate}
 
@@ -516,7 +516,7 @@ class Waveform:
         hop_length = numseconds_to_numsamples(hop_length_seconds, self.sample_rate)
 
         return librosa.feature.zero_crossing_rate(
-            self.waveform, frame_length=frame_length, hop_length=hop_length
+            y=self.waveform, frame_length=frame_length, hop_length=hop_length
         )
 
     def rms(self, frame_length_seconds=0.04, hop_length_seconds=0.01):
@@ -534,7 +534,7 @@ class Waveform:
         frame_length = numseconds_to_numsamples(frame_length_seconds, self.sample_rate)
         hop_length = numseconds_to_numsamples(hop_length_seconds, self.sample_rate)
 
-        return librosa.feature.rms(self.waveform, frame_length=frame_length, hop_length=hop_length)
+        return librosa.feature.rms(y=self.waveform, frame_length=frame_length, hop_length=hop_length)
 
     def intensity(self, frame_length_seconds=0.04, hop_length_seconds=0.01):
         """Get a value proportional to the intensity for each frame, with a specific frame length and hop length.
@@ -717,7 +717,7 @@ class Waveform:
             dict or np.array, [order + 1, ]: Dictionary mapping 'LPC_{i}' to the i'th lpc coefficient,
             for i = 0...order. Or: LP prediction error coefficients (np array case)
         """
-        lpcs = librosa.core.lpc(self.waveform, order=order)
+        lpcs = librosa.core.lpc(y=self.waveform, order=order)
         if return_np_array:
             return lpcs
         return {f'LPC_{i}': lpc for i, lpc in enumerate(lpcs)}
