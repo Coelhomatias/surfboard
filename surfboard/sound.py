@@ -171,7 +171,7 @@ class Waveform:
         n_fft = numseconds_to_numsamples(n_fft_seconds, self.sample_rate)
         hop_length = numseconds_to_numsamples(hop_length_seconds, self.sample_rate)
 
-        mag_spectrum, _ = librosa.stft(y=self.waveform, n_fft=n_fft, hop_length=hop_length)
+        mag_spectrum = librosa.stft(y=self.waveform, n_fft=n_fft, hop_length=hop_length)
         return mag_spectrum
 
     def bark_spectrogram(self, n_fft_seconds=0.04, hop_length_seconds=0.01):
