@@ -23,7 +23,7 @@ setup(
     ],
     download_url="https://github.com/novoic/surfboard/archive/v0.2.0.tar.gz",
     install_requires=[
-        "librosa==0.10.2",
+        "librosa==0.10.1",
         # "numba==0.48.0", # Needed until Librosa deploys fix to mute warnings.
         "pysptk>=0.1.18",
         "PeakUtils>=1.3.3",

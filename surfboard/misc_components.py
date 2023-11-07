@@ -119,7 +119,7 @@ def get_ppe(rat_f0):
     semitone_f0 = np.log(rat_f0) / np.log(2 ** (1 / 12))
 
     # Whitening
-    coefficients = librosa.core.lpc(semitone_f0[0], 2)
+    coefficients = librosa.lpc(y=semitone_f0[0], order=2)
     semi_f0 = lfilter(coefficients, [1], semitone_f0)[0]
     # Filter to the [-1.5, 1.5] range.
     semi_f0 = semi_f0[np.where(semi_f0 > -1.5)]
@@ -302,8 +302,8 @@ def get_bark_spectrogram(waveform, sample_rate, n_fft_seconds, hop_length_second
     hop_length = numseconds_to_numsamples(hop_length_seconds, sample_rate)
 
     # [n_frequency_bins, t]
-    spectrogram, _ = librosa.core.spectrum._spectrogram(waveform, n_fft=n_fft, hop_length=hop_length)
-    frequencies = librosa.core.fft_frequencies(sr=sample_rate, n_fft=n_fft)
+    spectrogram, _ = librosa.stft(waveform, n_fft=n_fft, hop_length=hop_length)
+    frequencies = librosa.fft_frequencies(sr=sample_rate, n_fft=n_fft)
 
     assert spectrogram.shape[0] == frequencies.shape[0], "Different number of frequencies..."
 

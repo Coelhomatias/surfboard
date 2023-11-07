@@ -66,7 +66,7 @@ class Waveform:
         assert isinstance(sample_rate, int), "The sample_rate argument to the constructor must be an integer."
 
         if path is not None:
-            self._waveform = librosa.core.load(path, sr=sample_rate)[0]
+            self._waveform = librosa.load(path, sr=sample_rate)[0]
         else:
             self._waveform = signal
 
@@ -171,7 +171,7 @@ class Waveform:
         n_fft = numseconds_to_numsamples(n_fft_seconds, self.sample_rate)
         hop_length = numseconds_to_numsamples(hop_length_seconds, self.sample_rate)
 
-        mag_spectrum, _ = librosa.core.spectrum._spectrogram(y=self.waveform, n_fft=n_fft, hop_length=hop_length)
+        mag_spectrum, _ = librosa.stft(y=self.waveform, n_fft=n_fft, hop_length=hop_length)
         return mag_spectrum
 
     def bark_spectrogram(self, n_fft_seconds=0.04, hop_length_seconds=0.01):
@@ -495,7 +495,7 @@ class Waveform:
             number of zero crossings in self.waveform zerocrossing["rate"]: number of zero crossings 
             divided by number of samples.
         """
-        num_zerocrossings = librosa.core.zero_crossings(y=self.waveform).sum()
+        num_zerocrossings = librosa.zero_crossings(y=self.waveform).sum()
         rate = num_zerocrossings / self.waveform.shape[0]
         return {"num_zerocrossings": num_zerocrossings, "zerocrossing_rate": rate}
 
@@ -706,7 +706,7 @@ class Waveform:
 
     def lpc(self, order=4, return_np_array=False):
         """This uses the librosa backend to get the Linear Prediction Coefficients via Burg's
-        method. See librosa.core.lpc for more details.
+        method. See librosa.lpc for more details.
 
         Args:
             order (int > 0): Order of the linear filter
@@ -717,7 +717,7 @@ class Waveform:
             dict or np.array, [order + 1, ]: Dictionary mapping 'LPC_{i}' to the i'th lpc coefficient,
             for i = 0...order. Or: LP prediction error coefficients (np array case)
         """
-        lpcs = librosa.core.lpc(y=self.waveform, order=order)
+        lpcs = librosa.lpc(y=self.waveform, order=order)
         if return_np_array:
             return lpcs
         return {f'LPC_{i}': lpc for i, lpc in enumerate(lpcs)}

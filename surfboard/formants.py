@@ -8,7 +8,7 @@ The implementation is ours. These values have been validated against the corresp
 import numpy as np
 import math
 from scipy.signal import lfilter
-from librosa.core import lpc
+from librosa import lpc
 
 from .utils import (
     metric_slidingwindow,
